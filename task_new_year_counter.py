@@ -9,6 +9,7 @@ def counter():
     minutes = (secs%3600) // 60
     summ = days_name(days)+ hours_name(hours) + minutes_name(minutes)
     summ_str = ' '.join(summ)
+    print (summ_str)
     return summ_str
 
 
