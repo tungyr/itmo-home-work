@@ -1,5 +1,6 @@
 def is_palindrome(s):
         s = str (s)
+        s = s.lower()
         s = s.replace(' ', '')
         a = s[::-1]
         if s == a:
@@ -10,6 +11,3 @@ def is_palindrome(s):
             return s == a
 
 is_palindrome('Сел в озере березов лес')
-
-
-

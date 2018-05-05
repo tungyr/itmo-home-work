@@ -1,6 +1,6 @@
 from datetime import datetime, time, timedelta
 def counter():
-    cur_day = datetime.today() 
+    cur_day = datetime.today()
     new_year = datetime(cur_day.year + 1, 1, 1,)
     diff = new_year - cur_day
     days = diff.days
