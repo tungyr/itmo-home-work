@@ -42,9 +42,9 @@ def initialize(conn):
     with conn, open(script_path) as f:
         conn.executescript(f.read())
 
-def task_edit(conn, task, id):
+def task_edit(conn, rev_task, rev_task_id):
     with conn:
-        cursor = conn.execute(SQL_EDIT_TASK, (task, id))
+        cursor = conn.execute(SQL_EDIT_TASK, (rev_task, rev_task_id))
 
 
 def task_compl(conn, coml_task_id, status):

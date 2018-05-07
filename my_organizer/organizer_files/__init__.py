@@ -20,11 +20,11 @@ def action_find_all():
 
 
 def action_edit():
-    id = input ('\nTask ID for revise?: ')
-    task = input ('\nRevise task: ')
+    rev_task_id = input ('\nTask ID for revise?: ')
+    rev_task = input ('\nRevise task: ')
     with get_connection() as conn:
-        storage.task_edit(conn, id, task)
-    return
+        storage.task_edit(conn, rev_task_id, rev_task)
+
 
 
 def action_complete():
@@ -78,6 +78,6 @@ def main():
         action = actions.get(cmd)
 
         if action:
-            action()                
+            action()
         else:
             print('Неизвестная команда')
