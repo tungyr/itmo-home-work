@@ -4,10 +4,9 @@ def http_headers_to_json(txt_file_path, json_file_path):
     """Перевод заголовков из html в json"""
     with open(txt_file_path) as f:
         string = f.readline()
-        f.seek(0)
         string = string.split()
         dict_json = {}
-        
+
         if string[1] == '200':
                 dict_json['protocol'] = string[0]
                 dict_json['status_code'] = string[1]
@@ -31,7 +30,6 @@ def http_headers_to_json(txt_file_path, json_file_path):
                 i = i.split(': ')
                 dict_json.update({i[0]:i[1]})
 
+
         with open(json_file_path, 'w') as f:
                 json.dump(dict_json, f, indent=4)
-
-http_headers_to_json(r'D:\headers-1.txt', r'D:\res.json')
