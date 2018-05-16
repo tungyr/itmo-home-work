@@ -27,12 +27,10 @@ def http_headers_to_json(txt_file_path, json_file_path):
             f.readline()
             for i in f:
                 if i != '\n':
-                    i = i.replace('\n','').rstrip()
+                    i = i.replace('\n','')
                     i = i.split(': ')
                     dict_json.update({i[0]:i[1]})
 
 
         with open(json_file_path, 'w') as f:
                 json.dump(dict_json, f, indent=4)
-
-http_headers_to_json(txt_file_path, json_file_path)
