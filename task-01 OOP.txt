@@ -1,0 +1,80 @@
+1. Функциональный подход
+
+
+Если система большая, значит у нее много модулей и компонентов, которые существенно различаются.
+А значит и настройки будут различаться существенно. Чтобы не выполнять одной программой все конфиги,
+будет программа определения типа конфига. Она будет отаправлять конфиг подпрограммам, которые производят 
+чтение и запись конфига под соответствующий модуль.
+
+
+def initialize():
+	config = ()	# извлекаем и анализируем содержимое конфига, конвертируем если надо в читаемый формат
+	if config type 1,2...n:	# идентифицируем тип конфига по заданным параметрам (если конфиги будут разных типов)
+	errors_check = config_checker(output_config)		# отправляем в модуль проверки допустимых значений введенных данных по типу
+	
+	
+def config_checker_type1(output_config):
+	for i in output config:	#проверка допустимых значений в конфиге
+	type1_handler(config_file)	# отправляем конфиг файл в функцию/модуль для дальнейшей обработки данного типа конфига
+	
+	
+config_handler_type1(config_file):
+	New_config = namedtuple(config, params)						# создаем именованный кортеж, где будем хранить настройки конфига по каждому пункту по шаблону
+	for i in config_file:										# заносим значения конфига в кортеж
+	New_config.make(i)
+		
+	with open ("file_current_settings", progr_path) as f:	
+	write f(new_config)											# записываем в папку подпрограммы новый файл конфига
+	
+def edit_config():
+	template = namedtuple(config, params)						# определение формата записи новых параметров
+	input()...													# введение параметров пользователем
+	
+	with open ("file_current_settings", progr_path) as f: 		# запись новых параметров в файл
+	
+	
+2. Объектно-ориентированный подход
+
+
+Class Config_file_type1(object):				# для всех модулей программы может быть свой класс типа конфига, по названию назначения
+ def __init__(self,): 
+		self.__params = params					# какие параметры содержит
+        self.__module = module 					# для какого модуля конфиги
+		self.__created = created				# время создания, обновления
+		self.__author = author					# кто создал конфиг
+		self.__code = code						# кодировка файла
+		
+		
+		
+def get_config_file(self):
+	получить конфиг
+	
+def get_config_type(self):
+	получить тип конфига
+	
+def copy_config(self):
+	копировать конфиг
+	
+def edit_config(self):
+	редактировать конфиг
+	
+	
+Class Converter_config(object): 		# конвертер конфигов для разных oc
+ def __init__(self, ): 			
+        self.__osin = os 				# формат какой oc принимает
+		self.__osout = os 				# для какой oc конвертирует
+		self.__version = version		# версия конвертера
+		self.format = format			# какие форматы записи
+
+def config_convert(self):
+	конвертировать конфиг
+	
+Class config_synchroniz(object):		# синхронизация конфигов на нескольких устройствах
+ def __init__(self, ): 
+		self.__format = os 				# формат файла для передачи
+		self.__device = os 				# для какого устройства может отправлять
+		
+def config_sync(self):
+	синхронизировать конфигурации по сети
+	
+
