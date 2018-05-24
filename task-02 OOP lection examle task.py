@@ -31,7 +31,12 @@ def get_instance(source):
     _, ext = os.path.splitext(str(source).lower())
     if ext == '.xml':
         return XmlParamHandler(source)
+    elif ext == '.txt':
         return TextParamHandler(source)
+    elif ext == '.json':
+        return JsonParamHandler(source)
+    else:
+        return PickleParamHandler(source)
 
 
 class TextParamHandler(ParamHandler):
@@ -78,7 +83,7 @@ class PickleParamHandler(ParamHandler):
 
 class ParamHandlerException(Exception):
     def __init__(self, text):
-        self.text = text
+        pass
 
 
 class ParamHandler(metaclass=ABCMeta):
@@ -107,6 +112,9 @@ class ParamHandler(metaclass=ABCMeta):
             )
             return klass(source, *args, **kwargs)
 
+txt_type = ParamHandler()
+txt_type.add_type("txt", TextParamHandler)
+
 
 config = ParamHandler.get_instance('./params.txt')
 config.add_param('key1', 'val1')
@@ -116,35 +124,3 @@ config.write()  # запись файла в XML формате
 
 config = ParamHandler.get_instance('./params.txt')
 config.read()  # читаем данные из текстового файла
-
-
-ParamHandler.add_type('txt', TextParamHandler)
-
-ParamHandler.add_type('xml', XmlParamHandler)
-
-ParamHandler.add_type('json', JsonParamhandler)
-
-Paramhandler.add_type('pickle', PickleParamHandler)
-
-
-config = ParamHandler.get_instance('./params.xml')
-config.add_param('key1', 'val1')
-config.add_param('key2', 'val2')
-config.add_param('key3', 'val3')
-config.write()  # запись файла в XML формате
-config = ParamHandler.get_instance('./params.txt')
-config.read()
-
-
-config = ParamHandler.get_instance('./params.pickle')
-config.add_param('key1', 'val1')
-config.add_param('key2', 'val2')
-config.add_param('key3', 'val3')
-config.write()
-
-
-config = ParamHandler.get_instance('./params.json')
-config.add_param('key1', 'val1')
-config.add_param('key2', 'val2')
-config.add_param('key3', 'val3')
-config.write()
