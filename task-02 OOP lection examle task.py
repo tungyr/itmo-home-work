@@ -1,93 +1,33 @@
 from abc import ABCMeta, abstractmethod
 import os
-
-
-class ParamHandler(metaclass=ABCMeta):
-    def __init__(self, source):
-        self.source = source
-        self.params = {}
-
-
-def add_param(self, key, value):
-    self.params[key] = value
-
-
-def get_all_params(self):
-    return self.params
-
-
-@abstractmethod
-def read(self):
-    pass
-
-
-@abstractmethod
-def write(self):
-    pass
-
-
-@classmethod
-def get_instance(source):
-    _, ext = os.path.splitext(str(source).lower())
-    if ext == '.xml':
-        return XmlParamHandler(source)
-    elif ext == '.txt':
-        return TextParamHandler(source)
-    elif ext == '.json':
-        return JsonParamHandler(source)
-    else:
-        return PickleParamHandler(source)
-
-
-class TextParamHandler(ParamHandler):
-            def __init__(self, source):
-                self.source = source
-                self.params = {}
-
-            def read(self):
-                with open(self.source) as f:
-                    result = f.read()
-
-            def write(self):
-                with open(self.source, 'w') as f:
-                    result = f.write(self.params, f)
-
-
-class JsonParamHandler(ParamHandler):
-            def __init__(self, source):
-                self.source = source
-                self.params = {}
-
-            def read(self):
-                with open(self.source) as f:
-                    result = json.load(f)
-
-            def write(self):
-                with open(self.source, 'w') as f:
-                    result = json.dump(self.params, f)
-
-
-class PickleParamHandler(ParamHandler):
-            def __init__(self, source):
-                self.source = source
-                self.params = {}
-
-            def read(self):
-                with open(self.source) as f:
-                    result = pickle.load(f)
-
-            def write(self):
-                with open(self.source, 'w') as f:
-                    result = pickle.dump(self.params, f)
+import pickle
+import json
 
 
 class ParamHandlerException(Exception):
-    def __init__(self, text):
         pass
 
 
 class ParamHandler(metaclass=ABCMeta):
     types = {}
+
+    def __init__(self, source):
+        self.source = source
+        self.params = {}
+
+    def add_param(self, key, value):
+        self.params[key] = value
+
+    def get_all_params(self):
+        return self.params
+
+    @abstractmethod
+    def read(self):
+        pass
+
+    @abstractmethod
+    def write(self):
+        pass
 
     @classmethod
     def add_type(cls, name, klass):
@@ -105,22 +45,84 @@ class ParamHandler(metaclass=ABCMeta):
         # Шаблон "Factory Method"
         _, ext = os.path.splitext(str(source).lower())
         ext = ext.lstrip('.')
+        print('ext:', ext)
         klass = cls.types.get(ext)
+        print('klass:', klass)
         if klass is None:
             raise ParamHandlerException(
                 'Type "{}" not found!'.format(ext)
             )
-            return klass(source, *args, **kwargs)
-
-txt_type = ParamHandler()
-txt_type.add_type("txt", TextParamHandler)
+        return klass(source, *args, **kwargs)
 
 
-config = ParamHandler.get_instance('./params.txt')
+class TextParamHandler(ParamHandler):
+            """
+            Чтение txt файла и присвоение параметров self.params
+            """
+            def read(self):
+                with open(self.source) as f:
+                    self.params = f.read()
+
+            def write(self):
+                """
+                Запись параметров self.params в txt файл
+                """
+                with open(self.source, 'w') as f:
+                    print('self.params:', self.params, type(self.params))
+                    # self.params = str(self.params)
+                    print('self.params:', self.params, type(self.params))
+                    for key, value in self.params.items():
+                        param = key + ':' + value + '\n'
+                        f.write(param)
+
+
+class JsonParamHandler(ParamHandler):
+
+            def read(self):
+                """
+                Чтение json файла и присвоение параметров self.params
+                """
+                with open(self.source) as f:
+                    json_params = json.load(f)
+                    for i in json_params:
+                        self.params[i] = json_params[i]
+
+            def write(self):
+                """
+                Запись параметров self.params в json файл
+                """
+                with open(self.source, 'w') as f:
+                    json.dump(self.params, f, indent=4)
+
+
+class PickleParamHandler(ParamHandler):
+
+            def read(self):
+                """
+                Чтение pickle файла и присвоение параметров self.params
+                """
+                with open(self.source, 'rb') as f:
+                    pickle_params = pickle.load(f)
+                    for i in pickle_params:
+                        self.params[i] = pickle_params[i]
+
+            def write(self):
+                """
+                Запись параметров self.params в pickle файл
+                """
+                with open(self.source, 'wb') as f:
+                    pickle.dump(self.params, f)
+
+
+ParamHandler.add_type('txt', TextParamHandler)
+ParamHandler.add_type('json', JsonParamHandler)
+ParamHandler.add_type('pickle', PickleParamHandler)
+
+config = ParamHandler.get_instance('./params.pickle')
 config.add_param('key1', 'val1')
 config.add_param('key2', 'val2')
 config.add_param('key3', 'val3')
-config.write()  # запись файла в XML формате
+config.write()
 
-config = ParamHandler.get_instance('./params.txt')
-config.read()  # читаем данные из текстового файла
+config = ParamHandler.get_instance('./params.json')
+config.read()
