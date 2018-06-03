@@ -10,7 +10,7 @@ class Validator(metaclass=ABCMeta):
     types = {}
 
     def __init__(self, value):
-        self.source = value
+        self.value = value
 
     @abstractmethod
     def validate(self):
@@ -42,12 +42,10 @@ class EMailValidator(Validator):
             Валидация email адреса
             """
             def validate(self, email):
-                if "@" in email:
-                    True
-                    print("True")
+                if len(email) > 3 and "@" in email:
+                    return True
                 else:
-                    False
-                    print("False")
+                    return False
 
 
 class DateTimeValidator(Validator):
@@ -69,4 +67,6 @@ Validator.add_type('email', EMailValidator)
 Validator.add_type('datetime', DateTimeValidator)
 
 validator = Validator.get_instance('datetime')
-validator.validate('1/9/2017 12:00:00')
+validator2 = Validator.get_instance('email')
+print('date', validator.validate('1/9/2017 12:00:00'))
+print('email', validator2.validate('itmo@profi.com'))
