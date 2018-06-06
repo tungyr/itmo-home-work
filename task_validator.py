@@ -19,7 +19,7 @@ class Validator(metaclass=ABCMeta):
     @classmethod
     def add_type(cls, name, klass):
         if not name:
-            raise ValidatorException('Type must have a name!')
+            raise ValidatorException('Validator must have a name!')
 
         if not issubclass(klass, Validator):
             raise ValidatorException(
@@ -32,7 +32,7 @@ class Validator(metaclass=ABCMeta):
         klass = cls.types.get(name)
         if klass is None:
             raise ValidatorException(
-                'Type "{}" not found!'.format(name)
+                'Validator with name "{}" not found!'.format(name)
             )
         return klass(name)
 
@@ -65,8 +65,3 @@ class DateTimeValidator(Validator):
 
 Validator.add_type('email', EMailValidator)
 Validator.add_type('datetime', DateTimeValidator)
-
-validator = Validator.get_instance('datetime')
-validator2 = Validator.get_instance('email')
-print('date', validator.validate('1/9/2017 12:00:00'))
-print('email', validator2.validate('itmo@profi.com'))

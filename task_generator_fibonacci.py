@@ -8,6 +8,3 @@ def fibonacci(qtty):
         current = current + temp
         qtty -= 1
     return current
-
-for i in fibonacci(10):
-    print(i)
