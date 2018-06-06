@@ -41,8 +41,8 @@ class Menu(metaclass=ABCMeta):
         if self.index >= len(list(self.commands.items())):
             raise StopIteration
 
-        command = list(self.commands.items())[self.ind]
-        self.ind += 1
+        command = list(self.commands.items())[self.index]
+        self.index += 1
         return command
 
 
