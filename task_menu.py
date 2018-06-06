@@ -8,87 +8,59 @@ class CommandException(Exception):
 class Command(metaclass=ABCMeta):
 
     @abstractmethod
-    def execute(self):
+    def execute(self, *args, **kwargs):
         pass
 
 
-class Menu():
+class Menu(metaclass=ABCMeta):
 
-    commands = {}
+    def __init__(self):
+        self.commands = {}
+        self.index = 0
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def add_command(self, name, klass):
+        if not name:
+            raise CommandException('Command must have a name!')
+        if not issubclass(klass, Command):
+            raise CommandException('Class "{}" is not Command!'.format(klass))
+        self.commands[name] = klass
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-            for i in dict.items(self.commands):
-                print(i)
-            else:
-                raise StopIteration
-
-    @classmethod
-    def add_command(cls, name, klass):
-            if not name:
-                raise CommandException('Command must have a name!')
-            if not issubclass(klass, Command):
-                raise CommandException(
-                    'Class "{}" is not Command!'.format(klass)
-                )
-            cls.commands[name] = klass
-
-    @classmethod
-    def execute(cls, name, *args, **kwargs):
-        klass = cls.commands.get(name)
+    def execute(self, name, *args, **kwargs):
+        klass = self.commands.get(name)
         if klass is None:
             raise CommandException(
                 'Command with name "{}" not found!'.format(name)
             )
         comm = klass(name, *args, **kwargs)
-        comm.execute()
+        return comm.execute()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index >= len(list(self.commands.items())):
+            raise StopIteration
+
+        command = list(self.commands.items())[self.ind]
+        self.ind += 1
+        return command
 
 
-class ShowAllCommand(Command):
-    def __init__(self, name, *args, **kwargs):
+
+class ShowCommand(Command):
+    def __init__(self, task_id):
         pass
 
-    def execute(self):
-        print('Show all command performed!')
-
-
-class AddTaskCommand(Command):
-    def __init__(self, name, *args, **kwargs):
+class ListCommand(Command):
+    def __init__(self):
         pass
 
-    def execute(self):
-        print('Add task command performed!')
 
 
-class ShowMenuCommand(Command):
-    def __init__(self, name, *args, **kwargs):
-        pass
-
-    def execute(self):
-        print('''
-                 1. Вывести список задач
-                 2. Добавить задачу
-                 3. Отредактировать задачу
-                 4. Завершить задачу
-                 5. Начать задачу сначала
-                 6. Удалить задачу
-                 m. Показать меню
-                 q. Выйти
-              ''')
-
-# Menu.add_command('Show All Commands', ShowAllCommand)
-# Menu.add_command('Add Task', AddTaskCommand)
-# Menu.add_command('Show Menu', ShowMenuCommand)
-# Menu.execute('Show All Commands')
-# Menu.execute('Add Task')
-# Menu.execute('Show Menu')
-# menu.execute('unknown')
-
-# lst = Menu('')
-# for name, command in lst:
-    # print(name, command)
+menu = Menu()
+menu.add_command('Show', ShowCommand)
+menu.add_command('list', ListCommand)
+# menu.add_command('Show Menu', ShowMenuCommand)
+menu.execute('show', 1)
+menu.execute('list')
+menu.execute('unknown')
